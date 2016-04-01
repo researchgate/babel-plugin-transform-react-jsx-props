@@ -1,0 +1,9 @@
+{
+  "plugins": ["syntax-jsx", ["transform-react-jsx-props",
+    {
+      "Tag": [
+        { "stringProp": "string", "numberProp": 2, "boolProp": false, "objProp": {"a":"b"} }
+      ]
+    }
+  ]]
+}
