@@ -1,5 +1,6 @@
 import { parse } from 'babylon';
 import { cloneDeep } from 'babel-types';
+import getJSXTagName from './utils/getJSXTagName';
 
 function parseExpression(code) {
   const result = parse('x = ' + JSON.stringify(code), { sourceType: "script", plugins: ['jsx'] });
@@ -30,6 +31,8 @@ function pushPropsToJSXElement(props, node, t) {
   }
 }
 
+export { getJSXTagName };
+
 /**
  * This adds additional props to a jsx snippet
  */
@@ -39,7 +42,7 @@ export default function ({ types }) {
       if (!state.opts) return;
       state.countTags = state.countTags || {};
 
-      const tagName = path.node.name.name;
+      const tagName = getJSXTagName(path);
       const tagIndex = state.countTags[tagName] = state.countTags[tagName] || 0;
       state.countTags[tagName]++;
 

@@ -2,10 +2,9 @@
   "plugins": ["syntax-jsx", ["transform-react-jsx-props",
     {
       "Tag": [
-        { "stringProp": "string", "numberProp": 2, "boolProp": false, "objProp": {"a":"b"} },
-        { "otherProp": "string" }
+        { "stringProp": "string", "numberProp": 2, "boolProp": false, "objProp": {"a":"b"} }
       ],
-      "Tut": [
+      "Tag.Tut.Foo": [
         { "otherProp2": "string2", "otherProp3": "string3" }
       ]
     }
