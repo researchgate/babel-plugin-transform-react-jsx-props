@@ -8,10 +8,27 @@ function parseExpression(code) {
   return cloneDeep(result.program.body[0].expression.right);
 }
 
-function pushPropsToJSXElement(props, node, t) {
+function pushPropsToJSXElement(props, path, t) {
   for (const prop in props) {
     let value;
     const propValue = props[prop];
+
+    if (prop === 'children') {
+      // we need to handle children in a special way
+      const isText = path.parentPath.get('children').every(childPath => childPath.isJSXText());
+
+      if (isText && typeof propValue === 'string') {
+        path.parentPath.node.children = [t.jSXText(propValue)];
+
+        // If it was a self-closing tag make it a non-self-closing one
+        if (path.node.selfClosing === true) {
+          path.node.selfClosing = false;
+          path.parentPath.node.closingElement = t.jSXClosingElement(cloneDeep(path.node.name));
+        }
+      }
+
+      continue;
+    }
 
     const id = t.jSXIdentifier(prop);
     switch (typeof propValue) {
@@ -25,9 +42,9 @@ function pushPropsToJSXElement(props, node, t) {
         value = t.jSXExpressionContainer(t.booleanLiteral(propValue));
         break;
       default:
-        value = t.jSXExpressionContainer(parseExpression(propValue, node.loc.line));
+        value = t.jSXExpressionContainer(parseExpression(propValue, path.node.loc.line));
     }
-    node.attributes.push(t.jSXAttribute(id, value));
+    path.node.attributes.push(t.jSXAttribute(id, value));
   }
 }
 
@@ -50,7 +67,7 @@ export default function ({ types }) {
 
       const props = state.opts[tagName][tagIndex];
 
-      pushPropsToJSXElement(props, path.node, types);
+      pushPropsToJSXElement(props, path, types);
     }
   };
 
