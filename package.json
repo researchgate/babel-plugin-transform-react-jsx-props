@@ -19,6 +19,9 @@
   "keywords": [
     "babel-plugin"
   ],
+  "engines": {
+    "node": "^4.0.0"
+  },
   "dependencies": {
     "babel-plugin-syntax-jsx": "^6.3.13",
     "babylon": "^6.0.0",
