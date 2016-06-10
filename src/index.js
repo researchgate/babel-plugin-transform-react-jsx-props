@@ -1,15 +1,16 @@
+/* eslint-disable no-param-reassign */
 import { parse } from 'babylon';
 import { cloneDeep } from 'babel-types';
 import getJSXTagName from './utils/getJSXTagName';
 
 function parseExpression(code) {
-  const result = parse('x = ' + JSON.stringify(code), { sourceType: "script", plugins: ['jsx'] });
+  const result = parse(`x = ${JSON.stringify(code)}`, { sourceType: 'script', plugins: ['jsx'] });
 
   return cloneDeep(result.program.body[0].expression.right);
 }
 
 function pushPropsToJSXElement(props, path, t) {
-  for (const prop in props) {
+  Object.keys(props).forEach(prop => {
     let value;
     const propValue = props[prop];
 
@@ -27,7 +28,7 @@ function pushPropsToJSXElement(props, path, t) {
         }
       }
 
-      continue;
+      return;
     }
 
     const id = t.jSXIdentifier(prop);
@@ -53,7 +54,7 @@ function pushPropsToJSXElement(props, path, t) {
     } else {
       path.node.attributes.push(attribute);
     }
-  }
+  });
 }
 
 export { getJSXTagName };
@@ -62,7 +63,7 @@ export { getJSXTagName };
  * This adds additional props to a jsx snippet
  */
 export default function ({ types }) {
-  let visitor = {
+  const visitor = {
     JSXOpeningElement(path, state) {
       if (!state.opts) return;
       state.countTags = state.countTags || {};
@@ -76,10 +77,10 @@ export default function ({ types }) {
       const props = state.opts[tagName][tagIndex];
 
       pushPropsToJSXElement(props, path, types);
-    }
+    },
   };
 
   return {
-    visitor
+    visitor,
   };
 }
