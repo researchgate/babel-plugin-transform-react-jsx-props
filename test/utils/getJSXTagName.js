@@ -11,19 +11,19 @@ function expressionToNode(code) {
   return path;
 }
 
-test('utils/getJSXTagName - simple name', t => {
+test('simple name', t => {
   const path = expressionToNode('<Button />');
 
   t.is(getJSXTagName(path), 'Button');
 });
 
-test('utils/getJSXTagName - object name', t => {
+test('object name', t => {
   const path = expressionToNode('<Button.Label />');
 
   t.is(getJSXTagName(path), 'Button.Label');
 });
 
-test('utils/getJSXTagName - nested object name', t => {
+test('nested object name', t => {
   const path = expressionToNode('<Button.Label.Icon />');
 
   t.is(getJSXTagName(path), 'Button.Label.Icon');
