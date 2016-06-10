@@ -44,7 +44,15 @@ function pushPropsToJSXElement(props, path, t) {
       default:
         value = t.jSXExpressionContainer(parseExpression(propValue, path.node.loc.line));
     }
-    path.node.attributes.push(t.jSXAttribute(id, value));
+
+    const attribute = t.jSXAttribute(id, value);
+
+    const attributeIndex = path.node.attributes.findIndex(attr => attr.name.name === prop);
+    if (attributeIndex > -1) {
+      path.node.attributes[attributeIndex] = attribute;
+    } else {
+      path.node.attributes.push(attribute);
+    }
   }
 }
 
