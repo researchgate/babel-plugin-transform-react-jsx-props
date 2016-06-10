@@ -1,4 +1,5 @@
-function getTagName(path) {
+/* @flow */
+function getTagName(path: Object): string {
   if (path.isJSXIdentifier()) {
     return path.node.name;
   } else if (path.isJSXMemberExpression()) {
@@ -8,4 +9,4 @@ function getTagName(path) {
   throw new Error('Unsupported path type');
 }
 
-export default path => getTagName(path.get('name'));
+export default (path: Object) => getTagName(path.get('name'));

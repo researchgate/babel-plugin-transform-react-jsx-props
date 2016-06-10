@@ -18,10 +18,10 @@ fixtures.forEach(function (testSuite) {
 });
 
 function runTest(test) {
-  var opts = test.options;
+  const { plugins, ...opts } = test.options;
 
   try {
-    var result = transform(test.actual.code, opts);
+    var result = transform(test.actual.code, { plugins });
     if (result.code && result.code.endsWith(';')) {
       result.code = result.code.slice(0, -1);
     }
@@ -30,7 +30,7 @@ function runTest(test) {
       if (err.message === opts.throws) {
         return;
       } else {
-        err.message = "Expected error message: " + opts.throws + ". Got error message: " + err.message;
+        err.message = 'Expected error message: ' + opts.throws + '. Got error message: ' + err.message;
         throw err;
       }
     }
@@ -39,7 +39,7 @@ function runTest(test) {
   }
 
   if (opts.throws) {
-    throw new Error("Expected error message: " + opts.throws + ". But parsing succeeded.");
+    throw new Error('Expected error message: ' + opts.throws + '. But parsing succeeded.');
   } else {
     if (test.expect.code !== result.code) {
       throw new Error(test.expect.code + ' !== ' + result.code);

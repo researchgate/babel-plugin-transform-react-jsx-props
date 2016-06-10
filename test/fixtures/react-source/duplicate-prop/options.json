@@ -2,7 +2,7 @@
   "plugins": ["syntax-jsx", ["transform-react-jsx-props",
     {
       "Tag": [
-        { "blub": "54321" }
+        { "blub": "\"54321\"" }
       ]
     }
   ]]

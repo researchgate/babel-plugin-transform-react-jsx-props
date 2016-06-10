@@ -1,0 +1,10 @@
+{
+  "plugins": ["syntax-jsx", ["transform-react-jsx-props",
+    {
+      "Tag": [
+        { "numberProp": 2 }
+      ]
+    }
+  ]],
+  "throws": "unknown: The value for prop \"numberProp\" is not a string. (e.g \"3\" => 3, \"'3'\" => '3', ...)"
+}

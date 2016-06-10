@@ -1,25 +1,39 @@
+/* @flow */
 /* eslint-disable no-param-reassign */
 import { parse } from 'babylon';
 import { cloneDeep } from 'babel-types';
 import getJSXTagName from './utils/getJSXTagName';
+import unquote from 'unquote';
 
-function parseExpression(code) {
-  const result = parse(`x = ${JSON.stringify(code)}`, { sourceType: 'script', plugins: ['jsx'] });
+function parseExpression(code: string, t: Object): Object {
+  const result = parse(`x = ${code}`, { sourceType: 'script', plugins: ['jsx'] });
 
-  return cloneDeep(result.program.body[0].expression.right);
+  let node = cloneDeep(result.program.body[0].expression.right);
+
+  // Everything besides strings gets wrapped in an expression container
+  if (!t.isStringLiteral(node)) {
+    node = t.jSXExpressionContainer(node);
+  }
+
+  return node;
 }
 
-function pushPropsToJSXElement(props, path, t) {
+function pushPropsToJSXElement(props: { [key: string]: string }, path: Object, t: Object): void {
   Object.keys(props).forEach(prop => {
-    let value;
     const propValue = props[prop];
+
+    if (typeof propValue !== 'string') {
+      throw new Error(
+        `The value for prop "${prop}" is not a string. (e.g "3" => 3, "'3'" => '3', ...)`
+      );
+    }
 
     if (prop === 'children') {
       // we need to handle children in a special way
       const isText = path.parentPath.get('children').every(childPath => childPath.isJSXText());
 
-      if (isText && typeof propValue === 'string') {
-        path.parentPath.node.children = [t.jSXText(propValue)];
+      if (isText) {
+        path.parentPath.node.children = [t.jSXText(unquote(propValue))];
 
         // If it was a self-closing tag make it a non-self-closing one
         if (path.node.selfClosing === true) {
@@ -32,19 +46,7 @@ function pushPropsToJSXElement(props, path, t) {
     }
 
     const id = t.jSXIdentifier(prop);
-    switch (typeof propValue) {
-      case 'string':
-        value = t.stringLiteral(propValue);
-        break;
-      case 'number':
-        value = t.jSXExpressionContainer(t.numericLiteral(propValue));
-        break;
-      case 'boolean':
-        value = t.jSXExpressionContainer(t.booleanLiteral(propValue));
-        break;
-      default:
-        value = t.jSXExpressionContainer(parseExpression(propValue, path.node.loc.line));
-    }
+    const value = parseExpression(propValue, t);
 
     const attribute = t.jSXAttribute(id, value);
 
@@ -62,9 +64,9 @@ export { getJSXTagName };
 /**
  * This adds additional props to a jsx snippet
  */
-export default function ({ types }) {
+export default function ({ types }: Object): { visitor: { [key: string]: Function } } {
   const visitor = {
-    JSXOpeningElement(path, state) {
+    JSXOpeningElement(path: Object, state: Object): void {
       if (!state.opts) return;
       state.countTags = state.countTags || {};
 
