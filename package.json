@@ -16,6 +16,7 @@
     "check": "npm run lint && npm run flow && npm test",
     "flow": "flow",
     "lint": "eslint src",
+    "precommit": "npm run check",
     "prepublish": "npm run build",
     "preversion": "npm run check",
     "test": "npm run build && ava test/",
@@ -48,8 +49,9 @@
     "babel-traverse": "^6.7.6",
     "eslint": "^3.0.0",
     "eslint-config-airbnb-base": "^4.0.0",
-    "eslint-plugin-import": "^1.8.1",
-    "flow-bin": "^0.28.0"
+    "eslint-plugin-import": "^1.10.2",
+    "flow-bin": "^0.28.0",
+    "husky": "^0.11.4"
   },
   "ava": {
     "babel": "inherit"

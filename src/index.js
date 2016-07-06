@@ -2,8 +2,8 @@
 /* eslint-disable no-param-reassign */
 import { parse } from 'babylon';
 import { cloneDeep } from 'babel-types';
-import getJSXTagName from './utils/getJSXTagName';
 import unquote from 'unquote';
+import getJSXTagName from './utils/getJSXTagName';
 
 function parseExpression(code: string, t: Object): Object {
   const result = parse(`x = ${code}`, { sourceType: 'script', plugins: ['jsx'] });
