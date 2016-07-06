@@ -47,7 +47,7 @@
     "babel-preset-stage-1": "^6.5.0",
     "babel-traverse": "^6.7.6",
     "eslint": "^2.11.1",
-    "eslint-config-airbnb-base": "^3.0.1",
+    "eslint-config-airbnb-base": "^4.0.0",
     "eslint-plugin-import": "^1.8.1",
     "flow-bin": "^0.28.0"
   },
