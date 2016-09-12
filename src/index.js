@@ -19,7 +19,7 @@ function parseExpression(code: string, t: Object): Object {
 }
 
 function pushPropsToJSXElement(props: { [key: string]: string }, path: Object, t: Object): void {
-  Object.keys(props).forEach(prop => {
+  Object.keys(props).forEach((prop) => {
     const propValue = props[prop];
 
     if (typeof propValue !== 'string') {

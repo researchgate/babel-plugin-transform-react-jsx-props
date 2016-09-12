@@ -9,4 +9,5 @@ function getTagName(path: Object): string {
   throw new Error('Unsupported path type');
 }
 
+// eslint-disable-next-line arrow-parens
 export default (path: Object) => getTagName(path.get('name'));
